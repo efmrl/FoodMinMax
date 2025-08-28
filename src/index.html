@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodMinMax - Optimize Your Nutrition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-full">
+    <div class="container mx-auto px-4 py-8" x-data="foodOptimizer()">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">FoodMinMax</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-300">Optimize your food choices within your nutritional constraints</p>
+        </header>
+
+        <!-- Budget & Goals Section -->
+        <section class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Set Your Nutritional Constraints</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label for="calorieLimit" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Maximum Calories
+                    </label>
+                    <input type="number" 
+                           id="calorieLimit" 
+                           x-model="constraints.maxCalories" 
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="2000">
+                </div>
+                <div>
+                    <label for="sodiumLimit" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Maximum Sodium (mg)
+                    </label>
+                    <input type="number" 
+                           id="sodiumLimit" 
+                           x-model="constraints.maxSodium" 
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="2300">
+                </div>
+                <div>
+                    <label for="proteinGoal" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Minimum Protein (g)
+                    </label>
+                    <input type="number" 
+                           id="proteinGoal" 
+                           x-model="constraints.minProtein" 
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="50">
+                </div>
+            </div>
+        </section>
+
+        <!-- Food Entry Section -->
+        <section class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Add Foods</h2>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Food Name</label>
+                    <input type="text" 
+                           x-model="newFood.name" 
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="Chicken breast">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Calories</label>
+                    <input type="number" 
+                           x-model="newFood.calories" 
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="165">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sodium (mg)</label>
+                    <input type="number" 
+                           x-model="newFood.sodium" 
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="74">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Protein (g)</label>
+                    <input type="number" 
+                           x-model="newFood.protein" 
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="31">
+                </div>
+                <div class="flex items-end">
+                    <button @click="addFood()" 
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200">
+                        Add Food
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Foods List Section -->
+        <section class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6" x-show="foods.length > 0">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Your Foods</h2>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <span x-text="foods.length"></span> foods added
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="border-b-2 border-gray-200 dark:border-gray-600">
+                            <th class="text-left py-3 px-2 font-medium text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white" @click="sortBy('name')">
+                                Food
+                                <span class="ml-1 text-xs" x-show="sortField === 'name'" x-text="sortOrder === 'asc' ? '↑' : '↓'"></span>
+                            </th>
+                            <th class="text-center py-3 px-2 font-medium text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white" @click="sortBy('proteinPercent')">
+                                Protein %
+                                <span class="ml-1 text-xs" x-show="sortField === 'proteinPercent'" x-text="sortOrder === 'asc' ? '↑' : '↓'"></span>
+                            </th>
+                            <th class="text-center py-3 px-2 font-medium text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white" @click="sortBy('caloriePercent')">
+                                Calorie %
+                                <span class="ml-1 text-xs" x-show="sortField === 'caloriePercent'" x-text="sortOrder === 'asc' ? '↑' : '↓'"></span>
+                            </th>
+                            <th class="text-center py-3 px-2 font-medium text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white" @click="sortBy('sodiumPercent')">
+                                Sodium %
+                                <span class="ml-1 text-xs" x-show="sortField === 'sodiumPercent'" x-text="sortOrder === 'asc' ? '↑' : '↓'"></span>
+                            </th>
+                            <th class="text-center py-3 px-2 font-medium text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white" @click="sortBy('proteinVsCalorie')">
+                                P/C Ratio
+                                <span class="ml-1 text-xs" x-show="sortField === 'proteinVsCalorie'" x-text="sortOrder === 'asc' ? '↑' : '↓'"></span>
+                            </th>
+                            <th class="text-center py-3 px-2 font-medium text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white" @click="sortBy('proteinVsSodium')">
+                                P/S Ratio
+                                <span class="ml-1 text-xs" x-show="sortField === 'proteinVsSodium'" x-text="sortOrder === 'asc' ? '↑' : '↓'"></span>
+                            </th>
+                            <th class="text-center py-3 px-2 font-medium text-gray-700 dark:text-gray-300">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="(food, index) in sortedFoods" :key="index">
+                            <tr class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750">
+                                <td class="py-3 px-2 text-gray-900 dark:text-white font-medium">
+                                    <div x-text="food.name"></div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                        <span x-text="food.calories"></span>cal, 
+                                        <span x-text="food.sodium"></span>mg, 
+                                        <span x-text="food.protein"></span>g
+                                    </div>
+                                </td>
+                                <td class="py-3 px-2 text-center">
+                                    <div class="text-lg font-semibold" :class="getProteinPercentClass(food)" x-text="getProteinPercent(food) + '%'"></div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400" x-text="'(' + food.protein + 'g)'"></div>
+                                </td>
+                                <td class="py-3 px-2 text-center">
+                                    <div class="text-lg font-semibold" :class="getCaloriePercentClass(food)" x-text="getCaloriePercent(food) + '%'"></div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400" x-text="'(' + food.calories + ')'"></div>
+                                </td>
+                                <td class="py-3 px-2 text-center">
+                                    <div class="text-lg font-semibold" :class="getSodiumPercentClass(food)" x-text="getSodiumPercent(food) + '%'"></div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400" x-text="'(' + food.sodium + 'mg)'"></div>
+                                </td>
+                                <td class="py-3 px-2 text-center">
+                                    <div class="text-lg font-semibold" :class="getProteinVsCalorieClass(food)" x-text="getProteinVsCalorieRatio(food)"></div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">protein vs calorie</div>
+                                </td>
+                                <td class="py-3 px-2 text-center">
+                                    <div class="text-lg font-semibold" :class="getProteinVsSodiumClass(food)" x-text="getProteinVsSodiumRatio(food)"></div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">protein vs sodium</div>
+                                </td>
+                                <td class="py-3 px-2 text-center">
+                                    <button @click="removeFood(foods.indexOf(food))" 
+                                            class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-medium text-sm px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                        Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Empty State -->
+        <div x-show="foods.length === 0" class="text-center py-12">
+            <div class="text-gray-400 dark:text-gray-500 text-xl mb-4">🍎</div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No foods added yet</h3>
+            <p class="text-gray-600 dark:text-gray-400">Start by adding some foods above to see how they fit your nutritional goals.</p>
+        </div>
+    </div>
+
+    <script>
+        function foodOptimizer() {
+            return {
+                constraints: {
+                    maxCalories: 2000,
+                    maxSodium: 2300,
+                    minProtein: 50
+                },
+                foods: [],
+                newFood: {
+                    name: '',
+                    calories: '',
+                    sodium: '',
+                    protein: ''
+                },
+                sortField: 'proteinVsCalorie',
+                sortOrder: 'desc',
+
+                addFood() {
+                    if (this.newFood.name && this.newFood.calories && this.newFood.sodium && this.newFood.protein) {
+                        this.foods.push({
+                            name: this.newFood.name,
+                            calories: parseFloat(this.newFood.calories),
+                            sodium: parseFloat(this.newFood.sodium),
+                            protein: parseFloat(this.newFood.protein)
+                        });
+                        this.newFood = { name: '', calories: '', sodium: '', protein: '' };
+                    }
+                },
+
+                removeFood(index) {
+                    this.foods.splice(index, 1);
+                },
+
+                getTotalCalories() {
+                    return this.foods.reduce((sum, food) => sum + food.calories, 0);
+                },
+
+                getTotalSodium() {
+                    return this.foods.reduce((sum, food) => sum + food.sodium, 0);
+                },
+
+                getTotalProtein() {
+                    return this.foods.reduce((sum, food) => sum + food.protein, 0);
+                },
+
+                getFoodScore(food) {
+                    const proteinEfficiency = food.protein / food.calories;
+                    const sodiumPenalty = food.sodium / 100;
+                    const score = Math.max(0, Math.min(100, Math.round((proteinEfficiency * 1000) - sodiumPenalty)));
+                    return score;
+                },
+
+                getFoodScoreClass(food) {
+                    const score = this.getFoodScore(food);
+                    if (score >= 80) return 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100';
+                    if (score >= 60) return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100';
+                    if (score >= 40) return 'bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100';
+                    return 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100';
+                },
+
+                getProteinPercent(food) {
+                    return Math.round((food.protein / this.constraints.minProtein) * 100);
+                },
+
+                getCaloriePercent(food) {
+                    return Math.round((food.calories / this.constraints.maxCalories) * 100);
+                },
+
+                getSodiumPercent(food) {
+                    return Math.round((food.sodium / this.constraints.maxSodium) * 100);
+                },
+
+                getProteinVsCalorieRatio(food) {
+                    const proteinPercent = this.getProteinPercent(food);
+                    const caloriePercent = this.getCaloriePercent(food);
+                    const ratio = caloriePercent > 0 ? (proteinPercent / caloriePercent) : 0;
+                    return ratio.toFixed(2);
+                },
+
+                getProteinVsSodiumRatio(food) {
+                    const proteinPercent = this.getProteinPercent(food);
+                    const sodiumPercent = this.getSodiumPercent(food);
+                    const ratio = sodiumPercent > 0 ? (proteinPercent / sodiumPercent) : 0;
+                    return ratio.toFixed(2);
+                },
+
+                getProteinPercentClass(food) {
+                    const percent = this.getProteinPercent(food);
+                    if (percent >= 25) return 'text-green-600 dark:text-green-400';
+                    if (percent >= 15) return 'text-yellow-600 dark:text-yellow-400';
+                    return 'text-gray-600 dark:text-gray-400';
+                },
+
+                getCaloriePercentClass(food) {
+                    const percent = this.getCaloriePercent(food);
+                    if (percent <= 10) return 'text-green-600 dark:text-green-400';
+                    if (percent <= 20) return 'text-yellow-600 dark:text-yellow-400';
+                    return 'text-red-600 dark:text-red-400';
+                },
+
+                getSodiumPercentClass(food) {
+                    const percent = this.getSodiumPercent(food);
+                    if (percent <= 5) return 'text-green-600 dark:text-green-400';
+                    if (percent <= 15) return 'text-yellow-600 dark:text-yellow-400';
+                    return 'text-red-600 dark:text-red-400';
+                },
+
+                getProteinVsCalorieClass(food) {
+                    const ratio = parseFloat(this.getProteinVsCalorieRatio(food));
+                    if (ratio >= 2.0) return 'text-green-600 dark:text-green-400';
+                    if (ratio >= 1.0) return 'text-yellow-600 dark:text-yellow-400';
+                    return 'text-red-600 dark:text-red-400';
+                },
+
+                getProteinVsSodiumClass(food) {
+                    const ratio = parseFloat(this.getProteinVsSodiumRatio(food));
+                    if (ratio >= 3.0) return 'text-green-600 dark:text-green-400';
+                    if (ratio >= 1.0) return 'text-yellow-600 dark:text-yellow-400';
+                    return 'text-red-600 dark:text-red-400';
+                },
+
+                get sortedFoods() {
+                    return [...this.foods].sort((a, b) => {
+                        let aValue, bValue;
+                        
+                        switch (this.sortField) {
+                            case 'name':
+                                aValue = a.name.toLowerCase();
+                                bValue = b.name.toLowerCase();
+                                break;
+                            case 'proteinPercent':
+                                aValue = this.getProteinPercent(a);
+                                bValue = this.getProteinPercent(b);
+                                break;
+                            case 'caloriePercent':
+                                aValue = this.getCaloriePercent(a);
+                                bValue = this.getCaloriePercent(b);
+                                break;
+                            case 'sodiumPercent':
+                                aValue = this.getSodiumPercent(a);
+                                bValue = this.getSodiumPercent(b);
+                                break;
+                            case 'proteinVsCalorie':
+                                aValue = parseFloat(this.getProteinVsCalorieRatio(a));
+                                bValue = parseFloat(this.getProteinVsCalorieRatio(b));
+                                break;
+                            case 'proteinVsSodium':
+                                aValue = parseFloat(this.getProteinVsSodiumRatio(a));
+                                bValue = parseFloat(this.getProteinVsSodiumRatio(b));
+                                break;
+                            default:
+                                return 0;
+                        }
+                        
+                        if (typeof aValue === 'string') {
+                            return this.sortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+                        }
+                        
+                        return this.sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+                    });
+                },
+
+                sortBy(field) {
+                    if (this.sortField === field) {
+                        this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        this.sortField = field;
+                        this.sortOrder = field === 'name' ? 'asc' : 'desc';
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
