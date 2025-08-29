@@ -7,6 +7,6 @@ mkdir -p public
 cp src/index.html public/
 
 # Sync to cloud
-efmrl sync -D
+efmrl sync
 
 echo "Deploy complete! Files copied to public/ and synced to cloud."

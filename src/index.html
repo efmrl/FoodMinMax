@@ -52,24 +52,8 @@
                            placeholder="50">
                 </div>
             </div>
-            <div class="flex justify-between items-center">
-                <div class="flex gap-2">
-                    <button @click="saveData()" 
-                            class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
-                            :disabled="saving"
-                            :class="saving ? 'opacity-50 cursor-not-allowed' : ''">
-                        <span x-show="!saving">💾 Save Data</span>
-                        <span x-show="saving">Saving...</span>
-                    </button>
-                    <button @click="loadData()" 
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
-                            :disabled="loading"
-                            :class="loading ? 'opacity-50 cursor-not-allowed' : ''">
-                        <span x-show="!loading">📥 Load Data</span>
-                        <span x-show="loading">Loading...</span>
-                    </button>
-                </div>
-                <div x-show="lastSaved" class="text-sm text-gray-600 dark:text-gray-400">
+            <div x-show="lastSaved" class="text-right">
+                <div class="text-sm text-gray-600 dark:text-gray-400">
                     Last saved: <span x-text="lastSaved"></span>
                 </div>
             </div>
@@ -121,16 +105,8 @@
         <section class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6" x-show="foods.length > 0">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Your Foods</h2>
-                <div class="flex items-center gap-4">
-                    <div class="text-sm text-gray-600 dark:text-gray-400">
-                        <span x-text="foods.length"></span> foods added
-                    </div>
-                    <button @click="saveFoods()" 
-                            class="text-sm bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded transition-colors duration-200"
-                            :disabled="saving"
-                            :class="saving ? 'opacity-50 cursor-not-allowed' : ''">
-                        💾 Save Foods
-                    </button>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <span x-text="foods.length"></span> foods added
                 </div>
             </div>
             <div class="overflow-x-auto">
@@ -256,6 +232,7 @@
 
                 removeFood(index) {
                     this.foods.splice(index, 1);
+                    this.saveFoods();
                 },
 
                 getTotalCalories() {
