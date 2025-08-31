@@ -195,6 +195,7 @@
     <script>
         function foodOptimizer() {
             return {
+                userID: '',
                 constraints: {
                     maxCalories: 2000,
                     maxSodium: 2300,
@@ -226,7 +227,8 @@
                     }
                 },
 
-                init() {
+                async init() {
+                    await this.loadUserID();
                     this.loadData();
                 },
 
@@ -348,9 +350,10 @@
                 },
 
                 async saveFoods() {
+                    if (!this.userID) return;
                     this.saving = true;
                     try {
-                        await fetch('/data/foods.json', {
+                        await fetch(`/data/${this.userID}/foods.json`, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -367,8 +370,9 @@
                 },
 
                 async saveConstraints() {
+                    if (!this.userID) return;
                     try {
-                        await fetch('/data/constraints.json', {
+                        await fetch(`/data/${this.userID}/constraints.json`, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -381,12 +385,27 @@
                 },
 
 
+                async loadUserID() {
+                    try {
+                        const response = await fetch('/.e/rest/session');
+                        if (response.ok) {
+                            const session = await response.json();
+                            if (session && session.data && session.data.user) {
+                                this.userID = session.data.user;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Failed to load user ID:', error);
+                    }
+                },
+
                 async loadData() {
+                    if (!this.userID) return;
                     this.loading = true;
                     try {
                         const [foodsResponse, constraintsResponse] = await Promise.all([
-                            fetch('/data/foods.json').catch(() => ({ ok: false })),
-                            fetch('/data/constraints.json').catch(() => ({ ok: false }))
+                            fetch(`/data/${this.userID}/foods.json`).catch(() => ({ ok: false })),
+                            fetch(`/data/${this.userID}/constraints.json`).catch(() => ({ ok: false }))
                         ]);
 
                         if (foodsResponse.ok) {
