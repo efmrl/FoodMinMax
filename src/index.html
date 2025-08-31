@@ -235,32 +235,6 @@
                     this.saveFoods();
                 },
 
-                getTotalCalories() {
-                    return this.foods.reduce((sum, food) => sum + food.calories, 0);
-                },
-
-                getTotalSodium() {
-                    return this.foods.reduce((sum, food) => sum + food.sodium, 0);
-                },
-
-                getTotalProtein() {
-                    return this.foods.reduce((sum, food) => sum + food.protein, 0);
-                },
-
-                getFoodScore(food) {
-                    const proteinEfficiency = food.protein / food.calories;
-                    const sodiumPenalty = food.sodium / 100;
-                    const score = Math.max(0, Math.min(100, Math.round((proteinEfficiency * 1000) - sodiumPenalty)));
-                    return score;
-                },
-
-                getFoodScoreClass(food) {
-                    const score = this.getFoodScore(food);
-                    if (score >= 80) return 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100';
-                    if (score >= 60) return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100';
-                    if (score >= 40) return 'bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100';
-                    return 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100';
-                },
 
                 getProteinPercent(food) {
                     return Math.round((food.protein / this.constraints.minProtein) * 100);
