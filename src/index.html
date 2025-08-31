@@ -376,7 +376,7 @@
                 async saveFoods() {
                     this.saving = true;
                     try {
-                        await fetch('/foods.json', {
+                        await fetch('/data/foods.json', {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -394,7 +394,7 @@
 
                 async saveConstraints() {
                     try {
-                        await fetch('/constraints.json', {
+                        await fetch('/data/constraints.json', {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -406,28 +406,13 @@
                     }
                 },
 
-                async saveData() {
-                    this.saving = true;
-                    try {
-                        await Promise.all([
-                            this.saveFoods(),
-                            this.saveConstraints()
-                        ]);
-                        this.lastSaved = new Date().toLocaleTimeString();
-                    } catch (error) {
-                        console.error('Failed to save data:', error);
-                        alert('Failed to save data. Please try again.');
-                    } finally {
-                        this.saving = false;
-                    }
-                },
 
                 async loadData() {
                     this.loading = true;
                     try {
                         const [foodsResponse, constraintsResponse] = await Promise.all([
-                            fetch('/foods.json').catch(() => ({ ok: false })),
-                            fetch('/constraints.json').catch(() => ({ ok: false }))
+                            fetch('/data/foods.json').catch(() => ({ ok: false })),
+                            fetch('/data/constraints.json').catch(() => ({ ok: false }))
                         ]);
 
                         if (foodsResponse.ok) {
