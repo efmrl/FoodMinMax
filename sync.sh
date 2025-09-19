@@ -3,8 +3,9 @@
 # Create public directory if it doesn't exist
 mkdir -p public
 
-# Copy index.html from src to public
+# Copy files from src to public
 cp src/index.html public/
+cp src/foodOptimizer.js public/
 
 # Sync to cloud
 efmrl sync -D
