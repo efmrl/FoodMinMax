@@ -18,6 +18,14 @@ document.addEventListener("alpine:init", () => {
         saving: false,
         loading: false,
         lastSaved: null,
+        editingFood: null,
+        editingFoodIndex: null,
+        editForm: {
+            name: "",
+            calories: "",
+            sodium: "",
+            protein: "",
+        },
 
         addFood() {
             if (
@@ -50,6 +58,46 @@ document.addEventListener("alpine:init", () => {
         removeFood(index) {
             this.foods.splice(index, 1);
             this.saveFoods();
+        },
+
+        openEditModal(food, index) {
+            this.editingFoodIndex = index;
+            this.editForm = {
+                name: food.name,
+                calories: food.calories,
+                sodium: food.sodium,
+                protein: food.protein,
+            };
+            this.editingFood = true;
+        },
+
+        closeEditModal() {
+            this.editingFood = null;
+            this.editingFoodIndex = null;
+            this.editForm = {
+                name: "",
+                calories: "",
+                sodium: "",
+                protein: "",
+            };
+        },
+
+        saveEditedFood() {
+            if (
+                this.editForm.name &&
+                this.editForm.calories &&
+                this.editForm.sodium &&
+                this.editForm.protein
+            ) {
+                this.foods[this.editingFoodIndex] = {
+                    name: this.editForm.name,
+                    calories: parseFloat(this.editForm.calories),
+                    sodium: parseFloat(this.editForm.sodium),
+                    protein: parseFloat(this.editForm.protein),
+                };
+                this.saveFoods();
+                this.closeEditModal();
+            }
         },
 
         getProteinPercent(food) {

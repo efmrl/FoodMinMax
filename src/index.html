@@ -260,7 +260,8 @@
                                 :key="index"
                             >
                                 <tr
-                                    class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750"
+                                    @click="openEditModal(food, foods.indexOf(food))"
+                                    class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750 cursor-pointer"
                                 >
                                     <td
                                         class="py-3 px-2 text-gray-900 dark:text-white font-medium"
@@ -335,7 +336,7 @@
                                     </td>
                                     <td class="py-3 px-2 text-center">
                                         <button
-                                            @click="removeFood(foods.indexOf(food))"
+                                            @click.stop="removeFood(foods.indexOf(food))"
                                             class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-medium text-sm px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                         >
                                             Remove
@@ -362,6 +363,113 @@
                     Start by adding some foods above to see how they fit your
                     nutritional goals.
                 </p>
+            </div>
+
+            <!-- Edit Food Modal -->
+            <div
+                x-show="editingFood"
+                x-cloak
+                @click.self="closeEditModal()"
+                @keydown.escape.window="closeEditModal()"
+                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+                style="display: none;"
+            >
+                <div
+                    @click.stop
+                    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6"
+                >
+                    <div class="flex justify-between items-center mb-6">
+                        <h3
+                            class="text-2xl font-semibold text-gray-900 dark:text-white"
+                        >
+                            Edit Food
+                        </h3>
+                        <button
+                            @click="closeEditModal()"
+                            class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                        >
+                            <svg
+                                class="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                                >Food Name</label
+                            >
+                            <input
+                                type="text"
+                                x-model="editForm.name"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Chicken breast"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                                >Calories</label
+                            >
+                            <input
+                                type="number"
+                                x-model="editForm.calories"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="165"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                                >Sodium (mg)</label
+                            >
+                            <input
+                                type="number"
+                                x-model="editForm.sodium"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="74"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                                >Protein (g)</label
+                            >
+                            <input
+                                type="number"
+                                x-model="editForm.protein"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="31"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 mt-6">
+                        <button
+                            @click="saveEditedFood()"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
+                        >
+                            Save Changes
+                        </button>
+                        <button
+                            @click="closeEditModal()"
+                            class="flex-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
