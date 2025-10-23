@@ -4,10 +4,10 @@
   "description": "small database to track desirability of foods",
   "main": "efmrl2.config.js",
   "scripts": {
-    "build:css": "mkdir -p public && tailwindcss -i src/input.css -o public/styles.css --minify",
+    "build:css": "mkdir -p public && sass --load-path=node_modules src/styles.scss public/styles.css --style=compressed",
     "build:favicon": "node build/build-favicon.js",
     "build": "npm run build:css && npm run build:favicon",
-    "watch:css": "mkdir -p public && tailwindcss -i src/input.css -o public/styles.css --watch",
+    "watch:css": "mkdir -p public && sass --load-path=node_modules --watch src/styles.scss:public/styles.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,7 +23,8 @@
   },
   "homepage": "https://github.com/samf/FoodMinMax#readme",
   "devDependencies": {
-    "sharp": "^0.34.4",
-    "tailwindcss": "^4.1.16"
+    "@picocss/pico": "^2.1.1",
+    "sass": "^1.93.2",
+    "sharp": "^0.34.4"
   }
 }

@@ -134,37 +134,37 @@ document.addEventListener("alpine:init", () => {
 
         getProteinPercentClass(food) {
             const percent = this.getProteinPercent(food);
-            if (percent >= 25) return "text-green-600 dark:text-green-400";
-            if (percent >= 15) return "text-yellow-600 dark:text-yellow-400";
-            return "text-gray-600 dark:text-gray-400";
+            if (percent >= 25) return "metric-good";
+            if (percent >= 15) return "metric-warning";
+            return "";
         },
 
         getCaloriePercentClass(food) {
             const percent = this.getCaloriePercent(food);
-            if (percent <= 10) return "text-green-600 dark:text-green-400";
-            if (percent <= 20) return "text-yellow-600 dark:text-yellow-400";
-            return "text-red-600 dark:text-red-400";
+            if (percent <= 10) return "metric-good";
+            if (percent <= 20) return "metric-warning";
+            return "metric-poor";
         },
 
         getSodiumPercentClass(food) {
             const percent = this.getSodiumPercent(food);
-            if (percent <= 5) return "text-green-600 dark:text-green-400";
-            if (percent <= 15) return "text-yellow-600 dark:text-yellow-400";
-            return "text-red-600 dark:text-red-400";
+            if (percent <= 5) return "metric-good";
+            if (percent <= 15) return "metric-warning";
+            return "metric-poor";
         },
 
         getProteinVsCalorieClass(food) {
             const ratio = parseFloat(this.getProteinVsCalorieRatio(food));
-            if (ratio >= 2.0) return "text-green-600 dark:text-green-400";
-            if (ratio >= 1.0) return "text-yellow-600 dark:text-yellow-400";
-            return "text-red-600 dark:text-red-400";
+            if (ratio >= 2.0) return "metric-good";
+            if (ratio >= 1.0) return "metric-warning";
+            return "metric-poor";
         },
 
         getProteinVsSodiumClass(food) {
             const ratio = parseFloat(this.getProteinVsSodiumRatio(food));
-            if (ratio >= 3.0) return "text-green-600 dark:text-green-400";
-            if (ratio >= 1.0) return "text-yellow-600 dark:text-yellow-400";
-            return "text-red-600 dark:text-red-400";
+            if (ratio >= 3.0) return "metric-good";
+            if (ratio >= 1.0) return "metric-warning";
+            return "metric-poor";
         },
 
         get sortedFoods() {
@@ -251,8 +251,10 @@ document.addEventListener("alpine:init", () => {
                     },
                     body: JSON.stringify(this.constraints),
                 });
+                this.lastSaved = new Date().toLocaleTimeString();
             } catch (error) {
                 console.error("Failed to save constraints:", error);
+                alert("Failed to save constraints. Please try again.");
             }
         },
 

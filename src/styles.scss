@@ -1,0 +1,43 @@
+// Import PicoCSS classless version
+@use "@picocss/pico/scss/pico.classless";
+
+// Minimal custom styles for FoodMinMax-specific functionality
+.text-center {
+  text-align: center;
+}
+
+// Color indicators for food metrics (good/warning/poor)
+.metric-good {
+  color: var(--pico-ins-color);
+}
+
+.metric-warning {
+  color: var(--pico-color-amber-500);
+}
+
+.metric-poor {
+  color: var(--pico-del-color);
+}
+
+// Table enhancements
+table {
+  th[data-sortable] {
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  tbody tr {
+    cursor: pointer;
+  }
+}
+
+// Small text for supplementary information
+small.extra-info {
+  display: block;
+  margin-top: 0.25rem;
+  opacity: 0.7;
+}
