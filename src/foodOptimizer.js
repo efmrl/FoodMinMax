@@ -37,6 +37,7 @@ function foodOptimizer() {
                 this.newFood.protein
             ) {
                 this.foods.push({
+                    id: crypto.randomUUID(),
                     name: this.newFood.name,
                     calories: parseFloat(this.newFood.calories),
                     sodium: parseFloat(this.newFood.sodium),
@@ -108,6 +109,7 @@ function foodOptimizer() {
                 this.editForm.protein
             ) {
                 this.foods[this.editingFoodIndex] = {
+                    id: this.foods[this.editingFoodIndex].id || crypto.randomUUID(),
                     name: this.editForm.name,
                     calories: parseFloat(this.editForm.calories),
                     sodium: parseFloat(this.editForm.sodium),
@@ -306,7 +308,11 @@ function foodOptimizer() {
                 if (foodsResponse.ok) {
                     const foods = await foodsResponse.json();
                     if (Array.isArray(foods)) {
-                        this.foods = foods;
+                        // Ensure all foods have an id
+                        this.foods = foods.map(food => ({
+                            ...food,
+                            id: food.id || crypto.randomUUID()
+                        }));
                     }
                 }
 

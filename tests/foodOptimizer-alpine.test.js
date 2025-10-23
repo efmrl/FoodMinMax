@@ -145,12 +145,14 @@ describe('FoodOptimizer Alpine.js Component Integration', () => {
       component.addFood();
 
       expect(component.foods).toHaveLength(1);
-      expect(component.foods[0]).toEqual({
+      expect(component.foods[0]).toEqual(expect.objectContaining({
         name: 'Apple',
         calories: 95,
         sodium: 2,
         protein: 0.5,
-      });
+      }));
+      expect(component.foods[0].id).toBeDefined();
+      expect(typeof component.foods[0].id).toBe('string');
       expect(component.newFood).toEqual({
         name: '',
         calories: '',
@@ -215,12 +217,14 @@ describe('FoodOptimizer Alpine.js Component Integration', () => {
 
       component.saveEditedFood();
 
-      expect(component.foods[0]).toEqual({
+      expect(component.foods[0]).toEqual(expect.objectContaining({
         name: 'Green Apple',
         calories: 90,
         sodium: 1,
         protein: 0.4,
-      });
+      }));
+      expect(component.foods[0].id).toBeDefined();
+      expect(typeof component.foods[0].id).toBe('string');
     });
   });
 
