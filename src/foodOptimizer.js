@@ -26,6 +26,8 @@ document.addEventListener("alpine:init", () => {
             sodium: "",
             protein: "",
         },
+        showConstraintsModal: false,
+        showAddFoodModal: false,
 
         addFood() {
             if (
@@ -80,6 +82,22 @@ document.addEventListener("alpine:init", () => {
                 sodium: "",
                 protein: "",
             };
+        },
+
+        openConstraintsModal() {
+            this.showConstraintsModal = true;
+        },
+
+        closeConstraintsModal() {
+            this.showConstraintsModal = false;
+        },
+
+        openAddFoodModal() {
+            this.showAddFoodModal = true;
+        },
+
+        closeAddFoodModal() {
+            this.showAddFoodModal = false;
         },
 
         saveEditedFood() {

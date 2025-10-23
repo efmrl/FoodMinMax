@@ -21,85 +21,11 @@
                     Optimize your food choices within your nutritional
                     constraints
                 </p>
+                <div class="grid">
+                    <button @click="openConstraintsModal()">Set Constraints</button>
+                    <button @click="openAddFoodModal()" class="contrast">Add Food</button>
+                </div>
             </header>
-
-            <!-- Budget & Goals Section -->
-            <article>
-                <h2>Set Your Nutritional Constraints</h2>
-                <div class="grid">
-                    <label>
-                        Maximum Calories
-                        <input
-                            type="number"
-                            id="calorieLimit"
-                            x-model="constraints.maxCalories"
-                            placeholder="2000"
-                        />
-                    </label>
-                    <label>
-                        Maximum Sodium (mg)
-                        <input
-                            type="number"
-                            id="sodiumLimit"
-                            x-model="constraints.maxSodium"
-                            placeholder="2300"
-                        />
-                    </label>
-                    <label>
-                        Minimum Protein (g)
-                        <input
-                            type="number"
-                            id="proteinGoal"
-                            x-model="constraints.minProtein"
-                            placeholder="50"
-                        />
-                    </label>
-                    <button @click="saveConstraints()">Save Constraints</button>
-                </div>
-                <div x-show="lastSaved">
-                    <small>Last saved: <span x-text="lastSaved"></span></small>
-                </div>
-            </article>
-
-            <!-- Food Entry Section -->
-            <article>
-                <h2>Add Foods</h2>
-                <div class="grid">
-                    <label>
-                        Food Name
-                        <input
-                            type="text"
-                            x-model="newFood.name"
-                            placeholder="Chicken breast"
-                        />
-                    </label>
-                    <label>
-                        Calories
-                        <input
-                            type="number"
-                            x-model="newFood.calories"
-                            placeholder="165"
-                        />
-                    </label>
-                    <label>
-                        Sodium (mg)
-                        <input
-                            type="number"
-                            x-model="newFood.sodium"
-                            placeholder="74"
-                        />
-                    </label>
-                    <label>
-                        Protein (g)
-                        <input
-                            type="number"
-                            x-model="newFood.protein"
-                            placeholder="31"
-                        />
-                    </label>
-                    <button @click="addFood()">Add Food</button>
-                </div>
-            </article>
 
             <!-- Foods List Section -->
             <article x-show="foods.length > 0">
@@ -265,6 +191,116 @@
                             Save Changes
                         </button>
                         <button @click="closeEditModal()" class="secondary">
+                            Cancel
+                        </button>
+                    </footer>
+                </article>
+            </dialog>
+
+            <!-- Constraints Modal -->
+            <dialog
+                x-show="showConstraintsModal"
+                @click.self="closeConstraintsModal()"
+                @keydown.escape.window="closeConstraintsModal()"
+                open
+            >
+                <article>
+                    <header>
+                        <button
+                            @click="closeConstraintsModal()"
+                            aria-label="Close"
+                            class="close"
+                        ></button>
+                        <h3>Set Your Nutritional Constraints</h3>
+                    </header>
+                    <label>
+                        Maximum Calories
+                        <input
+                            type="number"
+                            x-model="constraints.maxCalories"
+                            placeholder="2000"
+                        />
+                    </label>
+                    <label>
+                        Maximum Sodium (mg)
+                        <input
+                            type="number"
+                            x-model="constraints.maxSodium"
+                            placeholder="2300"
+                        />
+                    </label>
+                    <label>
+                        Minimum Protein (g)
+                        <input
+                            type="number"
+                            x-model="constraints.minProtein"
+                            placeholder="50"
+                        />
+                    </label>
+                    <footer>
+                        <button @click="saveConstraints(); closeConstraintsModal()">
+                            Save Constraints
+                        </button>
+                        <button @click="closeConstraintsModal()" class="secondary">
+                            Cancel
+                        </button>
+                    </footer>
+                </article>
+            </dialog>
+
+            <!-- Add Food Modal -->
+            <dialog
+                x-show="showAddFoodModal"
+                @click.self="closeAddFoodModal()"
+                @keydown.escape.window="closeAddFoodModal()"
+                open
+            >
+                <article>
+                    <header>
+                        <button
+                            @click="closeAddFoodModal()"
+                            aria-label="Close"
+                            class="close"
+                        ></button>
+                        <h3>Add Food</h3>
+                    </header>
+                    <label>
+                        Food Name
+                        <input
+                            type="text"
+                            x-model="newFood.name"
+                            placeholder="Chicken breast"
+                        />
+                    </label>
+                    <label>
+                        Calories
+                        <input
+                            type="number"
+                            x-model="newFood.calories"
+                            placeholder="165"
+                        />
+                    </label>
+                    <label>
+                        Sodium (mg)
+                        <input
+                            type="number"
+                            x-model="newFood.sodium"
+                            placeholder="74"
+                        />
+                    </label>
+                    <label>
+                        Protein (g)
+                        <input
+                            type="number"
+                            x-model="newFood.protein"
+                            placeholder="31"
+                        />
+                    </label>
+                    <footer>
+                        <button @click="addFood(); closeAddFoodModal()">
+                            Add Food
+                        </button>
+                        <button @click="closeAddFoodModal()" class="secondary">
                             Cancel
                         </button>
                     </footer>
