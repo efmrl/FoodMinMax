@@ -6,4 +6,3 @@ node_modules/
 
 # Build artifacts
 package-lock.json
-src/styles.css

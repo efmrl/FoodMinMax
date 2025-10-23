@@ -4,8 +4,8 @@
   "description": "small database to track desirability of foods",
   "main": "efmrl2.config.js",
   "scripts": {
-    "build:css": "tailwindcss -i src/input.css -o src/styles.css --minify",
-    "watch:css": "tailwindcss -i src/input.css -o src/styles.css --watch",
+    "build:css": "mkdir -p public && tailwindcss -i src/input.css -o public/styles.css --minify",
+    "watch:css": "mkdir -p public && tailwindcss -i src/input.css -o public/styles.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
