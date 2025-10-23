@@ -1,7 +1,25 @@
-// Import PicoCSS with custom configuration
+// Pico lightweight version
 @use "@picocss/pico/scss" with (
   $enable-semantic-container: true,
-  $enable-classes: false
+  $enable-classes: false,
+  $modules: (
+    "content/code": false,
+    "forms/input-color": false,
+    "forms/input-date": false,
+    "forms/input-file": false,
+    "forms/input-range": false,
+    "forms/input-search": false,
+    "components/accordion": false,
+    "components/card": true,
+    "components/dropdown": false,
+    "components/loading": false,
+    "components/modal": true,
+    "components/nav": true,
+    "components/progress": false,
+    "components/tooltip": false,
+    "utilities/accessibility": false,
+    "utilities/reduce-motion": false
+  )
 );
 
 // Minimal custom styles for FoodMinMax-specific functionality
