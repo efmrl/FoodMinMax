@@ -314,11 +314,16 @@ describe('FoodOptimizer Alpine.js Component Integration', () => {
       component.userID = 'test-user-123';
       global.fetch.mockRejectedValueOnce(new Error('Network error'));
 
+      // Suppress expected console.error
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
       await component.saveFoods();
 
       expect(global.alert).toHaveBeenCalledWith(
         'Failed to save foods. Please try again.'
       );
+
+      consoleErrorSpy.mockRestore();
     });
   });
 });
