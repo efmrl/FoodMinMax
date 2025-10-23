@@ -3,8 +3,8 @@
 # Create public directory if it doesn't exist
 mkdir -p public
 
-# Build CSS (outputs directly to public/)
-npm run build:css
+# Build everything (CSS and favicon)
+npm run build
 
 # Copy files from src to public
 cp src/index.html public/

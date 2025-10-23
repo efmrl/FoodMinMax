@@ -5,6 +5,8 @@
   "main": "efmrl2.config.js",
   "scripts": {
     "build:css": "mkdir -p public && tailwindcss -i src/input.css -o public/styles.css --minify",
+    "build:favicon": "node build/build-favicon.js",
+    "build": "npm run build:css && npm run build:favicon",
     "watch:css": "mkdir -p public && tailwindcss -i src/input.css -o public/styles.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,6 +23,7 @@
   },
   "homepage": "https://github.com/samf/FoodMinMax#readme",
   "devDependencies": {
+    "sharp": "^0.34.4",
     "tailwindcss": "^4.1.16"
   }
 }
