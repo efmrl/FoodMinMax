@@ -6,7 +6,8 @@
   "scripts": {
     "build:css": "mkdir -p public && sass --load-path=node_modules src/styles.scss public/styles.css --style=compressed",
     "build:favicon": "node build/favicon.js",
-    "build": "npm run build:css && npm run build:favicon",
+    "build:copy": "cp src/index.html src/foodOptimizer.js src/favicon.svg public/",
+    "build": "npm run build:css && npm run build:favicon && npm run build:copy",
     "watch:css": "mkdir -p public && sass --load-path=node_modules --watch src/styles.scss:public/styles.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
