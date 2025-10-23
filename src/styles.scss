@@ -63,3 +63,20 @@ small.extra-info {
   margin-top: 0.25rem;
   opacity: 0.7;
 }
+
+// Mixin to hide table columns
+@mixin hide-columns($columns...) {
+  @each $col in $columns {
+    th:nth-child(#{$col}),
+    td:nth-child(#{$col}) {
+      display: none;
+    }
+  }
+}
+
+// Hide percentage columns and actions on small screens, keeping name and ratios
+@media (max-width: 576px) {
+  table {
+    @include hide-columns(2, 3, 4, 7); // Hide Protein %, Calorie %, Sodium %, Actions
+  }
+}
