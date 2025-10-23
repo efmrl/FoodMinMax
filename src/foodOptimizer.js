@@ -1,9 +1,5 @@
 let initFinisher;
 
-const initPromise = new Promise((resolve, reject) => {
-    initFinisher = resolve;
-});
-
 function foodOptimizer() {
     return {
         userID: "",
@@ -59,6 +55,9 @@ function foodOptimizer() {
             }
         },
 
+        initPromise: new Promise((resolve, reject) => {
+            initFinisher = resolve;
+        }),
         async init() {
             await this.loadUserID();
             await this.loadData();
