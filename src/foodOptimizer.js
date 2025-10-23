@@ -1,5 +1,5 @@
-document.addEventListener("alpine:init", () => {
-    Alpine.data("foodOptimizer", () => ({
+function foodOptimizer() {
+    return {
         userID: "",
         constraints: {
             maxCalories: 2000,
@@ -329,5 +329,11 @@ document.addEventListener("alpine:init", () => {
                 this.loading = false;
             }
         },
-    }));
-});
+    };
+}
+
+// Make foodOptimizer available globally for Alpine.js
+window.foodOptimizer = foodOptimizer;
+
+// Export for testing
+export { foodOptimizer };
