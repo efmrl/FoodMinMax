@@ -1,3 +1,9 @@
+let initFinisher;
+
+const initPromise = new Promise((resolve, reject) => {
+    initFinisher = resolve;
+});
+
 function foodOptimizer() {
     return {
         userID: "",
@@ -55,7 +61,8 @@ function foodOptimizer() {
 
         async init() {
             await this.loadUserID();
-            this.loadData();
+            await this.loadData();
+            initFinisher();
         },
 
         removeFood(index) {
@@ -109,7 +116,9 @@ function foodOptimizer() {
                 this.editForm.protein
             ) {
                 this.foods[this.editingFoodIndex] = {
-                    id: this.foods[this.editingFoodIndex].id || crypto.randomUUID(),
+                    id:
+                        this.foods[this.editingFoodIndex].id ||
+                        crypto.randomUUID(),
                     name: this.editForm.name,
                     calories: parseFloat(this.editForm.calories),
                     sodium: parseFloat(this.editForm.sodium),
@@ -309,9 +318,9 @@ function foodOptimizer() {
                     const foods = await foodsResponse.json();
                     if (Array.isArray(foods)) {
                         // Ensure all foods have an id
-                        this.foods = foods.map(food => ({
+                        this.foods = foods.map((food) => ({
                             ...food,
-                            id: food.id || crypto.randomUUID()
+                            id: food.id || crypto.randomUUID(),
                         }));
                     }
                 }
