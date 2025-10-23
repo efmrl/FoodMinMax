@@ -2,6 +2,7 @@
 @use "@picocss/pico/scss" with (
   $enable-semantic-container: true,
   $enable-classes: false,
+  $theme-color: "orange",
   $modules: (
     "content/code": false,
     "forms/input-color": false,
