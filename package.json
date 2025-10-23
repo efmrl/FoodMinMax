@@ -9,7 +9,9 @@
     "build:copy": "cp src/index.html src/foodOptimizer.js src/favicon.svg public/",
     "build": "npm run build:css && npm run build:favicon && npm run build:copy",
     "watch:css": "mkdir -p public && sass --load-path=node_modules --watch src/styles.scss:public/styles.css",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "repository": {
     "type": "git",
@@ -25,7 +27,10 @@
   "homepage": "https://github.com/samf/FoodMinMax#readme",
   "devDependencies": {
     "@picocss/pico": "^2.1.1",
+    "@vitest/coverage-v8": "^4.0.2",
+    "happy-dom": "^20.0.8",
     "sass": "^1.93.2",
-    "sharp": "^0.34.4"
+    "sharp": "^0.34.4",
+    "vitest": "^4.0.2"
   }
 }
