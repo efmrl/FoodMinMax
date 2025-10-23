@@ -75,7 +75,6 @@
                                         x-text="sortOrder === 'asc' ? '↑' : '↓'"
                                     ></span>
                                 </th>
-                                <th class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -108,14 +107,6 @@
                                     <td class="text-center">
                                         <strong :class="getProteinVsSodiumClass(food)" x-text="getProteinVsSodiumRatio(food)"></strong>
                                         <small class="extra-info">protein vs sodium</small>
-                                    </td>
-                                    <td class="text-center">
-                                        <button
-                                            @click.stop="removeFood(foods.indexOf(food))"
-                                            class="secondary outline"
-                                        >
-                                            Remove
-                                        </button>
                                     </td>
                                 </tr>
                             </template>
@@ -188,6 +179,9 @@
                         </button>
                         <button @click="closeEditModal()" class="secondary">
                             Cancel
+                        </button>
+                        <button @click="confirm('Are you sure you want to remove this food? This cannot be undone.') && (removeFood(editingFoodIndex), closeEditModal())" class="contrast">
+                            Remove Food
                         </button>
                     </footer>
                 </article>

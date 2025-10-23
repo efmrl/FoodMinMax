@@ -74,9 +74,9 @@ small.extra-info {
   }
 }
 
-// Hide percentage columns and actions on small screens, keeping name and ratios
+// Hide percentage columns on small screens, keeping name and ratios
 @media (max-width: 576px) {
   table {
-    @include hide-columns(2, 3, 4, 7); // Hide Protein %, Calorie %, Sodium %, Actions
+    @include hide-columns(2, 3, 4); // Hide Protein %, Calorie %, Sodium %
   }
 }
