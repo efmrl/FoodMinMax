@@ -1,5 +1,8 @@
-// Import PicoCSS classless version
-@use "@picocss/pico/scss/pico.classless";
+// Import PicoCSS with custom configuration
+@use "@picocss/pico/scss" with (
+  $enable-semantic-container: true,
+  $enable-classes: false
+);
 
 // Minimal custom styles for FoodMinMax-specific functionality
 .text-center {
