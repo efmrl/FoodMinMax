@@ -12,14 +12,44 @@
     <body>
         <main x-data="foodOptimizer()" x-init="init()">
             <header>
+                <nav>
+                    <ul>
+                        <li><strong>Food Min Max</strong></li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <details class="dropdown">
+                                <summary>👤</summary>
+                                <ul>
+                                    <li>
+                                        <a href="#">About</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Export Data</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Import Data</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Credits</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Logout</a>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+                    </ul>
+                </nav>
+
                 <h1>FoodMinMax</h1>
-                <p>
-                    Optimize your food choices within your nutritional
-                    constraints
-                </p>
                 <div class="grid">
-                    <button @click="openConstraintsModal()">Set Constraints</button>
-                    <button @click="openAddFoodModal()" class="contrast">Add Food</button>
+                    <button @click="openConstraintsModal()">
+                        Set Constraints
+                    </button>
+                    <button @click="openAddFoodModal()" class="contrast">
+                        Add Food
+                    </button>
                 </div>
             </header>
 
@@ -40,35 +70,55 @@
                                         x-text="sortOrder === 'asc' ? '↑' : '↓'"
                                     ></span>
                                 </th>
-                                <th class="text-center" data-sortable @click="sortBy('proteinPercent')">
+                                <th
+                                    class="text-center"
+                                    data-sortable
+                                    @click="sortBy('proteinPercent')"
+                                >
                                     Protein %
                                     <span
                                         x-show="sortField === 'proteinPercent'"
                                         x-text="sortOrder === 'asc' ? '↑' : '↓'"
                                     ></span>
                                 </th>
-                                <th class="text-center" data-sortable @click="sortBy('caloriePercent')">
+                                <th
+                                    class="text-center"
+                                    data-sortable
+                                    @click="sortBy('caloriePercent')"
+                                >
                                     Calorie %
                                     <span
                                         x-show="sortField === 'caloriePercent'"
                                         x-text="sortOrder === 'asc' ? '↑' : '↓'"
                                     ></span>
                                 </th>
-                                <th class="text-center" data-sortable @click="sortBy('sodiumPercent')">
+                                <th
+                                    class="text-center"
+                                    data-sortable
+                                    @click="sortBy('sodiumPercent')"
+                                >
                                     Sodium %
                                     <span
                                         x-show="sortField === 'sodiumPercent'"
                                         x-text="sortOrder === 'asc' ? '↑' : '↓'"
                                     ></span>
                                 </th>
-                                <th class="text-center" data-sortable @click="sortBy('proteinVsCalorie')">
+                                <th
+                                    class="text-center"
+                                    data-sortable
+                                    @click="sortBy('proteinVsCalorie')"
+                                >
                                     P/C Ratio
                                     <span
                                         x-show="sortField === 'proteinVsCalorie'"
                                         x-text="sortOrder === 'asc' ? '↑' : '↓'"
                                     ></span>
                                 </th>
-                                <th class="text-center" data-sortable @click="sortBy('proteinVsSodium')">
+                                <th
+                                    class="text-center"
+                                    data-sortable
+                                    @click="sortBy('proteinVsSodium')"
+                                >
                                     P/S Ratio
                                     <span
                                         x-show="sortField === 'proteinVsSodium'"
@@ -78,35 +128,70 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <template x-for="(food, index) in sortedFoods" :key="index">
-                                <tr @click="openEditModal(food, foods.indexOf(food))">
+                            <template
+                                x-for="(food, index) in sortedFoods"
+                                :key="index"
+                            >
+                                <tr
+                                    @click="openEditModal(food, foods.indexOf(food))"
+                                >
                                     <td>
                                         <strong x-text="food.name"></strong>
                                         <small class="extra-info">
-                                            <span x-text="food.calories"></span>cal,
-                                            <span x-text="food.sodium"></span>mg,
+                                            <span x-text="food.calories"></span
+                                            >cal,
+                                            <span x-text="food.sodium"></span
+                                            >mg,
                                             <span x-text="food.protein"></span>g
                                         </small>
                                     </td>
                                     <td class="text-center">
-                                        <strong :class="getProteinPercentClass(food)" x-text="getProteinPercent(food) + '%'"></strong>
-                                        <small class="extra-info" x-text="'(' + food.protein + 'g)'"></small>
+                                        <strong
+                                            :class="getProteinPercentClass(food)"
+                                            x-text="getProteinPercent(food) + '%'"
+                                        ></strong>
+                                        <small
+                                            class="extra-info"
+                                            x-text="'(' + food.protein + 'g)'"
+                                        ></small>
                                     </td>
                                     <td class="text-center">
-                                        <strong :class="getCaloriePercentClass(food)" x-text="getCaloriePercent(food) + '%'"></strong>
-                                        <small class="extra-info" x-text="'(' + food.calories + ')'"></small>
+                                        <strong
+                                            :class="getCaloriePercentClass(food)"
+                                            x-text="getCaloriePercent(food) + '%'"
+                                        ></strong>
+                                        <small
+                                            class="extra-info"
+                                            x-text="'(' + food.calories + ')'"
+                                        ></small>
                                     </td>
                                     <td class="text-center">
-                                        <strong :class="getSodiumPercentClass(food)" x-text="getSodiumPercent(food) + '%'"></strong>
-                                        <small class="extra-info" x-text="'(' + food.sodium + 'mg)'"></small>
+                                        <strong
+                                            :class="getSodiumPercentClass(food)"
+                                            x-text="getSodiumPercent(food) + '%'"
+                                        ></strong>
+                                        <small
+                                            class="extra-info"
+                                            x-text="'(' + food.sodium + 'mg)'"
+                                        ></small>
                                     </td>
                                     <td class="text-center">
-                                        <strong :class="getProteinVsCalorieClass(food)" x-text="getProteinVsCalorieRatio(food)"></strong>
-                                        <small class="extra-info">protein vs calorie</small>
+                                        <strong
+                                            :class="getProteinVsCalorieClass(food)"
+                                            x-text="getProteinVsCalorieRatio(food)"
+                                        ></strong>
+                                        <small class="extra-info"
+                                            >protein vs calorie</small
+                                        >
                                     </td>
                                     <td class="text-center">
-                                        <strong :class="getProteinVsSodiumClass(food)" x-text="getProteinVsSodiumRatio(food)"></strong>
-                                        <small class="extra-info">protein vs sodium</small>
+                                        <strong
+                                            :class="getProteinVsSodiumClass(food)"
+                                            x-text="getProteinVsSodiumRatio(food)"
+                                        ></strong>
+                                        <small class="extra-info"
+                                            >protein vs sodium</small
+                                        >
                                     </td>
                                 </tr>
                             </template>
@@ -174,13 +259,14 @@
                         />
                     </label>
                     <footer>
-                        <button @click="saveEditedFood()">
-                            Save Changes
-                        </button>
+                        <button @click="saveEditedFood()">Save Changes</button>
                         <button @click="closeEditModal()" class="secondary">
                             Cancel
                         </button>
-                        <button @click="confirm('Are you sure you want to remove this food? This cannot be undone.') && (removeFood(editingFoodIndex), closeEditModal())" class="contrast">
+                        <button
+                            @click="confirm('Are you sure you want to remove this food? This cannot be undone.') && (removeFood(editingFoodIndex), closeEditModal())"
+                            class="contrast"
+                        >
                             Remove Food
                         </button>
                     </footer>
@@ -228,10 +314,15 @@
                         />
                     </label>
                     <footer>
-                        <button @click="saveConstraints(); closeConstraintsModal()">
+                        <button
+                            @click="saveConstraints(); closeConstraintsModal()"
+                        >
                             Save Constraints
                         </button>
-                        <button @click="closeConstraintsModal()" class="secondary">
+                        <button
+                            @click="closeConstraintsModal()"
+                            class="secondary"
+                        >
                             Cancel
                         </button>
                     </footer>
