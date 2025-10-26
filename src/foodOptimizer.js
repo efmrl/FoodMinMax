@@ -343,6 +343,38 @@ function foodOptimizer() {
                 this.loading = false;
             }
         },
+
+        exportData(event) {
+            // Stop event from propagating
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            // Create export object with just foods data
+            const exportData = {
+                foods: this.foods,
+                exportedAt: new Date().toISOString(),
+            };
+
+            // Convert to JSON
+            const jsonString = JSON.stringify(exportData, null, 2);
+
+            // Create a blob and download link
+            const blob = new Blob([jsonString], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `foodminmax-export-${new Date().toISOString().split("T")[0]}.json`;
+
+            // Don't add to DOM - just click directly
+            link.click();
+
+            // Cleanup after a short delay to ensure download starts
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 100);
+        },
     };
 }
 
