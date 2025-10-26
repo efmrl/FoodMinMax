@@ -30,6 +30,9 @@ function foodOptimizer() {
         },
         showConstraintsModal: false,
         showAddFoodModal: false,
+        showImportModal: false,
+        importData: null,
+        importPreview: null,
 
         addFood() {
             if (
@@ -105,6 +108,21 @@ function foodOptimizer() {
 
         closeAddFoodModal() {
             this.showAddFoodModal = false;
+        },
+
+        openImportModal() {
+            this.showImportModal = true;
+            // Close the dropdown menu
+            const dropdown = document.querySelector('.dropdown');
+            if (dropdown) {
+                dropdown.removeAttribute('open');
+            }
+        },
+
+        closeImportModal() {
+            this.showImportModal = false;
+            this.importData = null;
+            this.importPreview = null;
         },
 
         saveEditedFood() {
@@ -351,6 +369,12 @@ function foodOptimizer() {
                 event.stopPropagation();
             }
 
+            // Close the dropdown menu
+            const dropdown = document.querySelector('.dropdown');
+            if (dropdown) {
+                dropdown.removeAttribute('open');
+            }
+
             // Create export object with just foods data
             const exportData = {
                 foods: this.foods,
@@ -374,6 +398,89 @@ function foodOptimizer() {
             setTimeout(() => {
                 URL.revokeObjectURL(url);
             }, 100);
+        },
+
+        processImportFile(file) {
+            if (!file) {
+                return;
+            }
+
+            // Validate file type
+            if (!file.name.endsWith(".json")) {
+                alert("Please select a JSON file.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+
+                    // Validate the imported data structure
+                    if (!importedData.foods || !Array.isArray(importedData.foods)) {
+                        alert(
+                            "Invalid import file format. The file must contain a 'foods' array."
+                        );
+                        return;
+                    }
+
+                    // Store the imported data for confirmation
+                    this.importData = importedData;
+
+                    // Create preview information
+                    this.importPreview = {
+                        foodsCount: importedData.foods.length,
+                        exportedAt: importedData.exportedAt || null,
+                    };
+                } catch (error) {
+                    alert(
+                        "Error reading import file. Please ensure it is a valid JSON file."
+                    );
+                    console.error("Import error:", error);
+                }
+            };
+
+            reader.readAsText(file);
+        },
+
+        handleImportFileSelect(event) {
+            const file = event.target.files[0];
+            this.processImportFile(file);
+        },
+
+        async confirmImport() {
+            if (!this.importData) {
+                return;
+            }
+
+            if (
+                !confirm(
+                    "Are you sure you want to import this data? This will replace all your current foods. This action cannot be undone."
+                )
+            ) {
+                return;
+            }
+
+            // Ensure all foods have an id
+            const foods = this.importData.foods.map((food) => ({
+                ...food,
+                id: food.id || crypto.randomUUID(),
+            }));
+
+            // Replace current data with imported data
+            this.foods = foods;
+
+            // Save the imported data
+            await this.saveFoods();
+
+            // Clear import state and close modal
+            this.closeImportModal();
+
+            alert(`Successfully imported ${foods.length} foods.`);
+        },
+
+        cancelImport() {
+            this.closeImportModal();
         },
     };
 }

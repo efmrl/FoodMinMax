@@ -28,7 +28,7 @@
                                         <a href="#" @click.prevent.stop="exportData($event)">Export Data</a>
                                     </li>
                                     <li>
-                                        <a href="#">Import Data</a>
+                                        <a href="#" @click.prevent.stop="openImportModal()">Import Data</a>
                                     </li>
                                     <li>
                                         <a href="#">Credits</a>
@@ -383,6 +383,74 @@
                         </button>
                         <button @click="closeAddFoodModal()" class="secondary">
                             Cancel
+                        </button>
+                    </footer>
+                </article>
+            </dialog>
+
+            <!-- Import Modal -->
+            <dialog
+                x-show="showImportModal"
+                @click.self="closeImportModal()"
+                @keydown.escape.window="closeImportModal()"
+                open
+            >
+                <article>
+                    <header>
+                        <button
+                            @click="closeImportModal()"
+                            aria-label="Close"
+                            class="close"
+                        ></button>
+                        <h3>Import Data</h3>
+                    </header>
+
+                    <template x-if="!importPreview">
+                        <div>
+                            <p>Select a JSON file to import your food data.</p>
+                            <label for="import-file">
+                                <button
+                                    type="button"
+                                    class="secondary"
+                                    onclick="document.getElementById('import-file').click()"
+                                >
+                                    Browse Files
+                                </button>
+                            </label>
+                            <input
+                                type="file"
+                                id="import-file"
+                                accept=".json"
+                                @change="handleImportFileSelect($event)"
+                                style="display: none"
+                            />
+                        </div>
+                    </template>
+
+                    <template x-if="importPreview">
+                        <div>
+                            <h4>Preview</h4>
+                            <p>
+                                <strong>Foods:</strong>
+                                <span x-text="importPreview.foodsCount"></span>
+                            </p>
+                            <template x-if="importPreview.exportedAt">
+                                <p>
+                                    <strong>Exported At:</strong>
+                                    <span x-text="importPreview.exportedAt"></span>
+                                </p>
+                            </template>
+                        </div>
+                    </template>
+
+                    <footer>
+                        <template x-if="importPreview">
+                            <button @click="confirmImport()">
+                                Import Data
+                            </button>
+                        </template>
+                        <button @click="closeImportModal()" class="secondary">
+                            <span x-text="importPreview ? 'Cancel' : 'Close'"></span>
                         </button>
                     </footer>
                 </article>

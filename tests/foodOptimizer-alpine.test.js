@@ -331,6 +331,187 @@ describe('FoodOptimizer Alpine.js Component Integration', () => {
     });
   });
 
+  describe('Data Import', () => {
+    let mockFileReader;
+    let originalFileReader;
+    let originalConfirm;
+
+    beforeEach(() => {
+      // Use fake timers
+      vi.useFakeTimers();
+
+      // Mock FileReader
+      originalFileReader = global.FileReader;
+      mockFileReader = {
+        onload: null,
+        readAsText: vi.fn(function(file) {
+          // Simulate async file reading
+          setTimeout(() => {
+            if (this.onload) {
+              this.onload({ target: { result: file._mockContent } });
+            }
+          }, 0);
+        }),
+      };
+      global.FileReader = vi.fn(function() {
+        return mockFileReader;
+      });
+
+      // Mock confirm (alert is already mocked in parent beforeEach)
+      originalConfirm = global.confirm;
+      global.confirm = vi.fn(() => true);
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+      global.FileReader = originalFileReader;
+      global.confirm = originalConfirm;
+    });
+
+    it('validates file type and rejects non-JSON files', () => {
+      const file = { name: 'test.txt' };
+      component.processImportFile(file);
+
+      expect(global.alert).toHaveBeenCalledWith('Please select a JSON file.');
+    });
+
+    it('validates imported data structure', () => {
+      const file = {
+        name: 'test.json',
+        _mockContent: JSON.stringify({ invalid: 'data' }),
+      };
+
+      component.processImportFile(file);
+
+      // Advance timers to trigger file reading
+      vi.runAllTimers();
+
+      expect(global.alert).toHaveBeenCalledWith(
+        "Invalid import file format. The file must contain a 'foods' array."
+      );
+    });
+
+    it('creates preview from valid import file', () => {
+      const importData = {
+        foods: [
+          { id: '1', name: 'Chicken', protein: 30, calories: 165, sodium: 74 },
+          { id: '2', name: 'Rice', protein: 5, calories: 200, sodium: 50 },
+        ],
+        exportedAt: '2025-01-15T12:00:00.000Z',
+      };
+
+      const file = {
+        name: 'test.json',
+        _mockContent: JSON.stringify(importData),
+      };
+
+      component.processImportFile(file);
+
+      // Advance timers to trigger file reading
+      vi.runAllTimers();
+
+      expect(component.importPreview).toEqual({
+        foodsCount: 2,
+        exportedAt: '2025-01-15T12:00:00.000Z',
+      });
+      expect(component.importData).toEqual(importData);
+    });
+
+    it('handles malformed JSON gracefully', () => {
+      // Suppress expected console.error
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const file = {
+        name: 'test.json',
+        _mockContent: 'invalid json {{{',
+      };
+
+      component.processImportFile(file);
+
+      // Advance timers to trigger file reading
+      vi.runAllTimers();
+
+      expect(global.alert).toHaveBeenCalledWith(
+        'Error reading import file. Please ensure it is a valid JSON file.'
+      );
+
+      consoleErrorSpy.mockRestore();
+    });
+
+    it('confirms import and replaces existing data', async () => {
+      component.userID = 'test-user';
+      component.foods = [
+        { id: '0', name: 'OldFood', protein: 10, calories: 100, sodium: 50 },
+      ];
+
+      component.importData = {
+        foods: [
+          { id: '1', name: 'Chicken', protein: 30, calories: 165, sodium: 74 },
+          { id: '2', name: 'Rice', protein: 5, calories: 200, sodium: 50 },
+        ],
+        exportedAt: '2025-01-15T12:00:00.000Z',
+      };
+
+      await component.confirmImport();
+
+      expect(global.confirm).toHaveBeenCalledWith(
+        'Are you sure you want to import this data? This will replace all your current foods. This action cannot be undone.'
+      );
+      expect(component.foods).toHaveLength(2);
+      expect(component.foods[0].name).toBe('Chicken');
+      expect(component.foods[1].name).toBe('Rice');
+      expect(global.alert).toHaveBeenCalledWith('Successfully imported 2 foods.');
+    });
+
+    it('cancels import if user declines confirmation', async () => {
+      global.confirm.mockReturnValueOnce(false);
+
+      component.userID = 'test-user';
+      component.foods = [
+        { id: '0', name: 'OldFood', protein: 10, calories: 100, sodium: 50 },
+      ];
+
+      component.importData = {
+        foods: [
+          { id: '1', name: 'Chicken', protein: 30, calories: 165, sodium: 74 },
+        ],
+      };
+
+      await component.confirmImport();
+
+      expect(component.foods).toHaveLength(1);
+      expect(component.foods[0].name).toBe('OldFood');
+    });
+
+    it('adds IDs to imported foods without IDs', async () => {
+      component.userID = 'test-user';
+      component.importData = {
+        foods: [
+          { name: 'Chicken', protein: 30, calories: 165, sodium: 74 },
+        ],
+      };
+
+      await component.confirmImport();
+
+      expect(component.foods[0].id).toBeDefined();
+      expect(typeof component.foods[0].id).toBe('string');
+    });
+
+    it('handles file selection from input', () => {
+      const mockEvent = {
+        target: {
+          files: [{ name: 'test.json' }],
+        },
+      };
+
+      const spy = vi.spyOn(component, 'processImportFile');
+      component.handleImportFileSelect(mockEvent);
+
+      expect(spy).toHaveBeenCalledWith({ name: 'test.json' });
+      spy.mockRestore();
+    });
+  });
+
   describe('Data Export', () => {
     let mockBlob;
     let mockUrl;
