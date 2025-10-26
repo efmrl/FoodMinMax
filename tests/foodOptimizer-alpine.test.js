@@ -330,4 +330,118 @@ describe('FoodOptimizer Alpine.js Component Integration', () => {
       consoleErrorSpy.mockRestore();
     });
   });
+
+  describe('Data Export', () => {
+    let mockBlob;
+    let mockUrl;
+    let mockLink;
+    let createObjectURLSpy;
+    let revokeObjectURLSpy;
+    let originalBlob;
+    let originalCreateElement;
+
+    beforeEach(() => {
+      // Mock Blob
+      originalBlob = global.Blob;
+      mockBlob = {};
+      global.Blob = vi.fn(function(parts, options) {
+        return mockBlob;
+      });
+
+      // Mock URL.createObjectURL and URL.revokeObjectURL
+      mockUrl = 'blob:mock-url';
+      createObjectURLSpy = vi.fn(() => mockUrl);
+      revokeObjectURLSpy = vi.fn();
+      global.URL.createObjectURL = createObjectURLSpy;
+      global.URL.revokeObjectURL = revokeObjectURLSpy;
+
+      // Mock document.createElement
+      originalCreateElement = global.document.createElement;
+      mockLink = {
+        href: '',
+        download: '',
+        click: vi.fn(),
+      };
+      global.document.createElement = vi.fn(() => mockLink);
+
+      // Mock setTimeout to execute immediately
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+      global.Blob = originalBlob;
+      global.document.createElement = originalCreateElement;
+    });
+
+    it('exports food data with correct structure', () => {
+      component.foods = [
+        { id: '1', name: 'Chicken', protein: 30, calories: 165, sodium: 74 },
+        { id: '2', name: 'Rice', protein: 5, calories: 200, sodium: 50 },
+      ];
+
+      component.exportData();
+
+      // Check that Blob was created with correct data
+      expect(global.Blob).toHaveBeenCalledWith(
+        [expect.stringContaining('"foods"')],
+        { type: 'application/json' }
+      );
+
+      // Parse the JSON string passed to Blob
+      const blobCall = global.Blob.mock.calls[0];
+      const jsonString = blobCall[0][0];
+      const exportData = JSON.parse(jsonString);
+
+      expect(exportData.foods).toHaveLength(2);
+      expect(exportData.foods[0].name).toBe('Chicken');
+      expect(exportData.foods[1].name).toBe('Rice');
+      expect(exportData.exportedAt).toBeDefined();
+      expect(typeof exportData.exportedAt).toBe('string');
+    });
+
+    it('triggers download with correct filename', () => {
+      const today = new Date().toISOString().split('T')[0];
+      component.exportData();
+
+      expect(mockLink.download).toBe(`foodminmax-export-${today}.json`);
+      expect(mockLink.href).toBe(mockUrl);
+      expect(mockLink.click).toHaveBeenCalled();
+    });
+
+    it('handles empty foods array', () => {
+      component.foods = [];
+      component.exportData();
+
+      const blobCall = global.Blob.mock.calls[0];
+      const jsonString = blobCall[0][0];
+      const exportData = JSON.parse(jsonString);
+
+      expect(exportData.foods).toHaveLength(0);
+      expect(exportData.exportedAt).toBeDefined();
+    });
+
+    it('prevents default and stops propagation when event is provided', () => {
+      const mockEvent = {
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+      };
+
+      component.exportData(mockEvent);
+
+      expect(mockEvent.preventDefault).toHaveBeenCalled();
+      expect(mockEvent.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('cleans up blob URL after timeout', () => {
+      component.exportData();
+
+      expect(revokeObjectURLSpy).not.toHaveBeenCalled();
+
+      // Fast-forward time
+      vi.advanceTimersByTime(100);
+
+      expect(revokeObjectURLSpy).toHaveBeenCalledWith(mockUrl);
+    });
+  });
 });

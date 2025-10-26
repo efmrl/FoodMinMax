@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // Since the code is Alpine-based, we'll test the logic by creating
 // a mock component with the same methods
