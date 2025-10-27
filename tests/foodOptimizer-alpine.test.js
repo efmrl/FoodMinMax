@@ -413,6 +413,8 @@ describe('FoodOptimizer Alpine.js Component Integration', () => {
       expect(component.importPreview).toEqual({
         foodsCount: 2,
         exportedAt: '2025-01-15T12:00:00.000Z',
+        hasConstraints: false,
+        constraints: null,
       });
       expect(component.importData).toEqual(importData);
     });
