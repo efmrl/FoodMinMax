@@ -406,9 +406,10 @@ function foodOptimizer() {
                 dropdown.removeAttribute('open');
             }
 
-            // Create export object with just foods data
+            // Create export object with foods and constraints
             const exportData = {
                 foods: this.foods,
+                constraints: this.constraints,
                 exportedAt: new Date().toISOString(),
             };
 
@@ -462,6 +463,8 @@ function foodOptimizer() {
                     this.importPreview = {
                         foodsCount: importedData.foods.length,
                         exportedAt: importedData.exportedAt || null,
+                        hasConstraints: !!importedData.constraints,
+                        constraints: importedData.constraints || null,
                     };
                 } catch (error) {
                     alert(
@@ -484,11 +487,12 @@ function foodOptimizer() {
                 return;
             }
 
-            if (
-                !confirm(
-                    "Are you sure you want to import this data? This will replace all your current foods. This action cannot be undone."
-                )
-            ) {
+            const hasConstraints = this.importData.constraints;
+            const confirmMessage = hasConstraints
+                ? "Are you sure you want to import this data? This will replace all your current foods and constraints. This action cannot be undone."
+                : "Are you sure you want to import this data? This will replace all your current foods. This action cannot be undone.";
+
+            if (!confirm(confirmMessage)) {
                 return;
             }
 
@@ -501,13 +505,27 @@ function foodOptimizer() {
             // Replace current data with imported data
             this.foods = foods;
 
+            // Import constraints if they exist
+            if (hasConstraints) {
+                this.constraints = {
+                    ...this.constraints,
+                    ...this.importData.constraints,
+                };
+            }
+
             // Save the imported data
             await this.saveFoods();
+            if (hasConstraints) {
+                await this.saveConstraints();
+            }
 
             // Clear import state and close modal
             this.closeImportModal();
 
-            alert(`Successfully imported ${foods.length} foods.`);
+            const message = hasConstraints
+                ? `Successfully imported ${foods.length} foods and constraints.`
+                : `Successfully imported ${foods.length} foods.`;
+            alert(message);
         },
 
         cancelImport() {

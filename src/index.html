@@ -434,6 +434,14 @@
                                 <strong>Foods:</strong>
                                 <span x-text="importPreview.foodsCount"></span>
                             </p>
+                            <template x-if="importPreview.hasConstraints">
+                                <p>
+                                    <strong>Constraints:</strong>
+                                    Max Calories: <span x-text="importPreview.constraints.maxCalories"></span>,
+                                    Max Sodium: <span x-text="importPreview.constraints.maxSodium"></span>mg,
+                                    Min Protein: <span x-text="importPreview.constraints.minProtein"></span>g
+                                </p>
+                            </template>
                             <template x-if="importPreview.exportedAt">
                                 <p>
                                     <strong>Exported At:</strong>
