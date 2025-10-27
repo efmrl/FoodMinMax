@@ -16,16 +16,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/samf/FoodMinMax.git"
+    "url": "git+https://github.com/efmrl/FoodMinMax.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/samf/FoodMinMax/issues"
+    "url": "https://github.com/efmrl/FoodMinMax/issues"
   },
-  "homepage": "https://github.com/samf/FoodMinMax#readme",
+  "homepage": "https://github.com/efmrl/FoodMinMax#readme",
   "devDependencies": {
     "@picocss/pico": "^2.1.1",
     "@vitest/coverage-v8": "^4.0.2",
