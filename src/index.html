@@ -31,7 +31,7 @@
                                         <a href="#" @click.prevent.stop="openImportModal()">Import Data</a>
                                     </li>
                                     <li>
-                                        <a href="#">Credits</a>
+                                        <a href="#" @click.prevent.stop="openCreditsModal()">Credits</a>
                                     </li>
                                     <li>
                                         <a href="#">Logout</a>
@@ -451,6 +451,31 @@
                         </template>
                         <button @click="closeImportModal()" class="secondary">
                             <span x-text="importPreview ? 'Cancel' : 'Close'"></span>
+                        </button>
+                    </footer>
+                </article>
+            </dialog>
+
+            <!-- Credits Modal -->
+            <dialog
+                x-show="showCreditsModal"
+                @click.self="closeCreditsModal()"
+                @keydown.escape.window="closeCreditsModal()"
+                open
+            >
+                <article>
+                    <header>
+                        <button
+                            @click="closeCreditsModal()"
+                            aria-label="Close"
+                            class="close"
+                        ></button>
+                        <h3>Credits</h3>
+                    </header>
+                    <div x-html="creditsContent"></div>
+                    <footer>
+                        <button @click="closeCreditsModal()" class="secondary">
+                            Close
                         </button>
                     </footer>
                 </article>

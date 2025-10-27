@@ -6,8 +6,9 @@
   "scripts": {
     "build:css": "mkdir -p public && sass --load-path=node_modules src/styles.scss public/styles.css --style=compressed",
     "build:favicon": "node build/favicon.cjs",
+    "build:credits": "node build/build-credits.cjs",
     "build:copy": "cp src/index.html src/foodOptimizer.js src/favicon.svg public/",
-    "build": "npm run build:css && npm run build:favicon && npm run build:copy",
+    "build": "npm run build:css && npm run build:favicon && npm run build:credits && npm run build:copy",
     "watch:css": "mkdir -p public && sass --load-path=node_modules --watch src/styles.scss:public/styles.css",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -29,6 +30,7 @@
     "@picocss/pico": "^2.1.1",
     "@vitest/coverage-v8": "^4.0.2",
     "happy-dom": "^20.0.8",
+    "markdown-it": "^14.1.0",
     "sass": "^1.93.2",
     "sharp": "^0.34.4",
     "vitest": "^4.0.2"

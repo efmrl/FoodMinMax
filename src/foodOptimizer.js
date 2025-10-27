@@ -31,8 +31,10 @@ function foodOptimizer() {
         showConstraintsModal: false,
         showAddFoodModal: false,
         showImportModal: false,
+        showCreditsModal: false,
         importData: null,
         importPreview: null,
+        creditsContent: "",
 
         addFood() {
             if (
@@ -123,6 +125,35 @@ function foodOptimizer() {
             this.showImportModal = false;
             this.importData = null;
             this.importPreview = null;
+        },
+
+        async openCreditsModal() {
+            // Close the dropdown menu
+            const dropdown = document.querySelector('.dropdown');
+            if (dropdown) {
+                dropdown.removeAttribute('open');
+            }
+
+            // Fetch credits content if not already loaded
+            if (!this.creditsContent) {
+                try {
+                    const response = await fetch('/credits.html');
+                    if (response.ok) {
+                        this.creditsContent = await response.text();
+                    } else {
+                        this.creditsContent = '<p>Unable to load credits.</p>';
+                    }
+                } catch (error) {
+                    console.error('Failed to load credits:', error);
+                    this.creditsContent = '<p>Error loading credits.</p>';
+                }
+            }
+
+            this.showCreditsModal = true;
+        },
+
+        closeCreditsModal() {
+            this.showCreditsModal = false;
         },
 
         saveEditedFood() {
