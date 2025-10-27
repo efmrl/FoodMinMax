@@ -6,7 +6,7 @@
   "scripts": {
     "build:css": "mkdir -p public && sass --load-path=node_modules src/styles.scss public/styles.css --style=compressed",
     "build:favicon": "node build/favicon.cjs",
-    "build:credits": "node build/build-credits.cjs",
+    "build:credits": "node build/credits.cjs",
     "build:copy": "cp src/index.html src/foodOptimizer.js src/favicon.svg public/",
     "build": "npm run build:css && npm run build:favicon && npm run build:credits && npm run build:copy",
     "watch:css": "mkdir -p public && sass --load-path=node_modules --watch src/styles.scss:public/styles.css",
