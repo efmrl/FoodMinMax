@@ -338,14 +338,31 @@ function foodOptimizer() {
         async loadUserID() {
             try {
                 const response = await fetch("/.e/rest/session");
-                if (response.ok) {
-                    const session = await response.json();
-                    if (session && session.data && session.data.user) {
-                        this.userID = session.data.user;
-                    }
+                if (!response.ok) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+                const session = await response.json();
+                if (session && session.data && session.data.user) {
+                    this.userID = session.data.user;
+                } else {
+                    window.location.href = '/login.html';
                 }
             } catch (error) {
                 console.error("Failed to load user ID:", error);
+                window.location.href = '/login.html';
+            }
+        },
+
+        async logout() {
+            try {
+                await fetch("/.e/rest/session", {
+                    method: "DELETE",
+                });
+                window.location.href = '/login.html';
+            } catch (error) {
+                console.error("Failed to logout:", error);
+                alert("Failed to logout. Please try again.");
             }
         },
 

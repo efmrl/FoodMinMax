@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Enter Token - FoodMinMax</title>
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+        <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+        <link rel="stylesheet" href="styles.css" />
+        <script type="module" src="login.js"></script>
+    </head>
+    <body>
+        <main class="container">
+            <article x-data="loginTokenForm()">
+                <hgroup>
+                    <h1>FoodMinMax</h1>
+                    <p>Enter the token from your email</p>
+                </hgroup>
+                <form @submit.prevent="submitToken()">
+                    <label for="token">
+                        Login token
+                        <input
+                            type="text"
+                            id="token"
+                            name="token"
+                            x-model="token"
+                            placeholder="Enter token"
+                            required
+                            autocomplete="off"
+                        />
+                    </label>
+                    <button type="submit">Verify</button>
+                    <p x-show="error" x-text="error" style="color: var(--pico-del-color);"></p>
+                </form>
+            </article>
+        </main>
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+        ></script>
+    </body>
+</html>
